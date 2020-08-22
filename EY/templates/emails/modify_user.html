@@ -1,0 +1,53 @@
+{% extends "emails/base.html" %}
+{% block head_content %}
+<title>Sign up</title>
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script>
+    $(document).ready(function(){
+        var value = $('#gender').find('#{{ profile.gender }}').text();
+        $('#gender')
+            .find('#{{ profile.gender }}')
+            .remove()
+            .end()
+            .prepend('<option id="{{ profile.gender }}" value="{{ profile.gender }}" selected>' + value + '</option>>')
+        ;
+    })
+</script>
+{% endblock %}
+{% block container %}
+    {% if error %}
+        <p class="alert alert-danger">{{ error }}</p>
+    {% endif %}
+    <form action="{% url 'modify_user_save' %}" method="POST">
+        {% csrf_token %}
+        <input class="form-control" type="hidden" name="id_user" value="{{ profile.user.pk }}" />
+        <div class="form-group">
+            <input class="form-control" type="text" placeholder="Username" name="username" required="true" value="{{ profile.user.username }}" />
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" placeholder="First name" name="first_name" required="true" value="{{ profile.first_name }}" />
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" placeholder="Father's Last name" name="first_last_name" required="true" value="{{ profile.first_last_name }}" />
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" placeholder="Mother's Last name" name="second_last_name" value="{{ profile.second_last_name }}" />
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="number" placeholder="Identification" name="identification" required="true" value="{{ profile.identification }}" />
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="number" placeholder="Age" name="age" required="true" value="{{ profile.age }}" />
+        </div>
+        <div class="form-group">
+            <select class="form-control" id="gender" name="gender" required="true" value="{{ profile.gender }}">
+                <option value="">--- Gender ---</option>
+                <option id="F" value="F">Female</option>
+                <option id="M" value="M">Male</option>
+                <option id="Ot" value="Ot">Other</option>
+                <option id="NA" value="NA">N/A</option>
+            </select>
+        </div>
+        <button class="btn btn-primary btn-block mt-5" type="submit">Modify</button>
+    </form>
+{% endblock %}

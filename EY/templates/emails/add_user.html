@@ -1,0 +1,46 @@
+{% extends "emails/base.html" %}
+{% block head_content %}
+<title>Sign up</title>
+{% endblock %}
+{% block container %}
+    {% if error %}
+        <p class="alert alert-danger">{{ error }}</p>
+    {% endif %}
+    <form action="{% url 'home' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <input class="form-control" type="text" placeholder="Username" name="username" required="true" />
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password" placeholder="Password" name="passwd" required="true" />
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password" placeholder="Password confirmation" name="passwd_confirmation" required="true" />
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" placeholder="First name" name="first_name" required="true" />
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" placeholder="Father's Last name" name="first_last_name" required="true" />
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" placeholder="Mother's Last name" name="second_last_name" />
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="number" placeholder="Identification" name="identification" required="true" />
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="number" placeholder="Age" name="age" required="true" />
+        </div>
+        <div class="form-group">
+            <select class="form-control" name="gender" required="true">
+                <option value="">--- Gender ---</option>
+                <option value="F">Female</option>
+                <option value="M">Male</option>
+                <option value="Ot">Other</option>
+                <option value="NA">N/A</option>
+            </select> 
+        </div>
+        <button class="btn btn-primary btn-block mt-5" type="submit">Register</button>
+    </form>
+{% endblock %}

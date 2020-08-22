@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block head_content %}
+<title>@{{ request.user.username }} | Home</title>
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#mytable th').click(function(){
+            $('#id_user_modify')
+                .find('#id_user')
+                .remove()
+                .end()
+                .prepend('<input type="hidden" class="form-control" name="id_user" id="id_user" value="' + $(this).html().split('value="')[1].split('"')[0] + '">')
+            ;
+            $('#id_user_remove')
+                .find('#id_user')
+                .remove()
+                .end()
+                .prepend('<input type="hidden" class="form-control" name="id_user" id="id_user" value="' + $(this).html().split('value="')[1].split('"')[0] + '">')
+            ;
+            window.open("{% url 'emails_user' %}?id=" + $(this).html().split('value="')[1].split('"')[0], '_self'); 
+        });
+    });
+</script>
+{% endblock %}
+
+{% block container %}
+    <div class="row">
+        <div class="container offset-lg-2">
+            <div class="row">
+                <div class="col-7">
+                    <form class="form-inline" action="{% url 'filter_user' %}" method="POST">{% csrf_token %}
+                        <div class="form-group mx-sm-3 mb-2">
+                            <input type="text" class="form-control" name="filter_emails" id="filter_emails" placeholder="Filter">
+                        </div>
+                        <button type="submit" class="btn btn-outline-primary mb-2">Search</button>
+                    </form>
+                </div>
+                <div class="col">
+                    <a class="btn btn-outline-success" href="{% url 'add_user' %}" role="button">Add</a>
+                </div>
+                <div class="col">
+                    <form id="id_user_modify" class="form-inline" action="{% url 'modify_user' %}" method="POST">{% csrf_token %}
+                        <input type="hidden" class="form-control" name="id_user" id="id_user" value="0">
+                        <button id="modify_user_button" type="submit" class="btn btn-outline-warning mb-2">Modify</button>
+                    </form>
+                </div>
+                <div class="col">
+                    <form id="id_user_remove" class="form-inline" action="{% url 'remove_user' %}" method="POST">{% csrf_token %}
+                        <input type="hidden" class="form-control" name="id_user" id="id_user" value="0">
+                        <button id="remove_user_button" type="submit" class="btn btn-outline-danger mb-2">Remove</button>
+                    </form>
+                </div>
+                <div class="col"></div>
+            </div>
+        </div>
+        <div class="col-lg-4 offset-lg-2">
+            <table class="table table-striped" id="mytable">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Fathers Last Name</th>
+                        <th scope="col">Mothers Last Name</th>
+                        <th scope="col">Identification</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Gender</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for profile in profiles %}
+                    <tr>
+                        <th><input id="select_user" type="radio" name="select_user" value="{{ profile.user.pk }}"></th>
+                        <td scope="row">{{ profile.user.pk }}</td>
+                        <td>{{ profile.user.username }}</td>
+                        <td>{{ profile.first_name }}</td>
+                        <td>{{ profile.first_last_name }}</td>
+                        <td>{{ profile.second_last_name }}</td>
+                        <td>{{ profile.identification }}</td>
+                        <td>{{ profile.age }}</td>
+                        <td>{{ profile.gender }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
